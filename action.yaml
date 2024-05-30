@@ -19,7 +19,6 @@ runs:
     - name: Bump version and push tag
       if: ${{ steps.tag.outputs.tag == '' }}
       id: tag_version
-      shell: bash
       uses: anothrNick/github-tag-action@1.36.0
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
