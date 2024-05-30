@@ -14,10 +14,12 @@ runs:
   steps:
     - name: Get Existing Tag Version
       id: tag
+      shell: bash
       run: echo "tag=$(git describe --tags $GITHUB_SHA || echo '')" >> $GITHUB_OUTPUT
     - name: Bump version and push tag
       if: ${{ steps.tag.outputs.tag == '' }}
       id: tag_version
+      shell: bash
       uses: anothrNick/github-tag-action@1.36.0
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
@@ -25,4 +27,5 @@ runs:
         PRERELEASE_SUFFIX: dev
     - name: Set Final Tag Version
       id: finaltag
+      shell: bash
       run: echo "tag=${{ steps.tag.outputs.tag == '' && steps.tag_version.outputs.new_tag || steps.tag.outputs.tag }}" >> $GITHUB_OUTPUT
