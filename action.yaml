@@ -1,0 +1,28 @@
+name: 'Try generate tag'
+description: 'Try generate tag'
+inputs: 
+  github-token:
+    description: 'github token'
+    required: true
+    default: ''
+outputs:
+  tag:
+    description: "Tag"
+    value: ${{ steps.finaltag.outputs.tag }}
+runs:
+  using: "composite"
+  steps:
+    - name: Get Existing Tag Version
+      id: tag
+      run: echo "tag=$(git describe --tags $GITHUB_SHA || echo '')" >> $GITHUB_OUTPUT
+    - name: Bump version and push tag
+      if: ${{ steps.tag.outputs.tag == '' }}
+      id: tag_version
+      uses: anothrNick/github-tag-action@1.36.0
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        WITH_V: false
+        PRERELEASE_SUFFIX: dev
+    - name: Set Final Tag Version
+      id: finaltag
+      run: echo "tag=${{ steps.tag.outputs.tag == '' && steps.tag_version.outputs.new_tag || steps.tag.outputs.tag }}" >> $GITHUB_OUTPUT
