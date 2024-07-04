@@ -15,7 +15,7 @@ runs:
     - name: Get Existing Tag Version
       id: tag
       shell: bash
-      run: echo "tag=$(git describe --tags $GITHUB_SHA || echo '')" >> $GITHUB_OUTPUT
+      run: echo "tag=$(git describe --exact-match --tags $GITHUB_SHA || echo '')" >> $GITHUB_OUTPUT
     - name: Bump version and push tag
       if: ${{ steps.tag.outputs.tag == '' }}
       id: tag_version
